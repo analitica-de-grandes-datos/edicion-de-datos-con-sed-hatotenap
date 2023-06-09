@@ -41,3 +41,15 @@
 #
 #  >>> Escriba su codigo a partir de este punto <<<
 #
+# * Transforme el archivo para que todos los campos nulos aparezcan como `\N`.
+sed 's/\(;N;\)\|\(;;\)\|\(;\\n;\)/;\\N;/g' data.csv > output.csv |
+# * Use el `.` para indicar decimales.
+sed 's/\(,\)/./g' data.csv |
+#  * Reemplace los `;` por `,`.
+sed 's/\(;\)/,/g' |
+#  * Convierta el formato de las fechas de DD/MM/YY a YYYY-MM-DD.
+sed 's/\/\([0-9][0-9]\);/\/20\1;/g' | sed 's/\/\([0-9]\)\//\/0\1\//g' | sed ':a;N;$!ba;s/\n\([0-9]\)\//\n0\1\//g' |
+sed 's/\([0-9][0-9]\)\/\([0-9][0-9]\)\/\(20[0-9][0-9]\)/\3\-\2\-\1/g' |
+# Transformar todos los valores de la columna 2 a letras en mayúscula
+sed 's/\([a-z]\)/\U&/g'
+
